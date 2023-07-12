@@ -1,0 +1,2 @@
+# dinozor_isimlerini_tatil_gunlerine_gore_ayarlama
+ Dinozor İsimleri

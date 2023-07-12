@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dinozor Seçenekleri</title>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .option-input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .option-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .add-option-button,
+        .delete-option-button {
+            padding: 8px 16px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition-duration: 0.4s;
+        }
+
+        .add-option-button:hover,
+        .delete-option-button:hover {
+            background-color: #45a049;
+        }
+
+        .selected-options {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .delete-button {
+            color: red;
+            cursor: pointer;
+        }
+
+        .copy-button,
+        .excel-button {
+            margin-top: 20px;
+            padding: 8px 16px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition-duration: 0.4s;
+        }
+
+        .copy-button:hover,
+        .excel-button:hover {
+            background-color: #007A9B;
+        }
+
+        .copy-notification {
+            display: none;
+            background-color: #f9f9f9;
+            color: #333;
+            padding: 8px;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+
+</head>
+<title>Tatil Günleri</title>
+<style>
+  label {
+    display: block;
+  }
+</style>
+</head>
+<body>
+    <div class="container">
+      <h1>Dinozor Seçenekleri</h1>
+      <div class="option-inputs">
+        <input id="addOptionInput" class="option-input" type="text" placeholder="Dinozor adı ekle">
+        <div class="option-buttons">
+          <button id="addOptionButton" class="add-option-button">Dinozor Ekle</button>
+          
+          <button id="deleteOptionButton" class="delete-option-button">Dinozor Sil</button>
+        </div>
+      </div>
+  
+      <h2>Tatil Günleri</h2>
+      <form id="holidayForm">
+        <label>
+          <input type="checkbox" id="mondayCheckbox" name="monday" value="Pazartesi" onclick="checkHoliday('Pazartesi'); kaydet()"> Pazartesi
+        </label>
+        <label>
+          <input type="checkbox" id="tuesdayCheckbox" name="tuesday" value="Salı" onclick="checkHoliday('Salı'); kaydet()"> Salı
+        </label>
+        <label>
+          <input type="checkbox" id="wednesdayCheckbox" name="wednesday" value="Çarşamba" onclick="checkHoliday('Çarşamba'); kaydet()"> Çarşamba
+        </label>
+        <label>
+          <input type="checkbox" id="thursdayCheckbox" name="thursday" value="Perşembe" onclick="checkHoliday('Perşembe'); kaydet()"> Perşembe
+        </label>
+        <label>
+          <input type="checkbox" id="fridayCheckbox" name="friday" value="Cuma" onclick="checkHoliday('Cuma'); kaydet()"> Cuma
+        </label>
+        <label>
+          <input type="checkbox" id="saturdayCheckbox" name="saturday" value="Cumartesi" onclick="checkHoliday('Cumartesi'); kaydet()"> Cumartesi
+        </label>
+        <label>
+          <input type="checkbox" id="sundayCheckbox" name="sunday" value="Pazar" onclick="checkHoliday('Pazar'); kaydet()"> Pazar
+        </label>
+        
+      </form>
+  
+      <div class="selected-options" id="selectedOptions"></div>
+      <div class="option-buttons">
+        <button id="selectButton" class="add-option-button">Rastgele Seçenekler Oluştur</button>
+        <button id="selectWeeklyButton" class="add-option-button">Haftalık Seçenekler Oluştur</button>
+      </div>
+      <div class="option-buttons">
+        <button id="copyButton" class="copy-button">Kopyala</button>
+        <button id="excelButton" class="excel-button">Excel'e Yaz</button>
+      </div>
+      <div class="copy-notification" id="copyNotification">Metin panoya kopyalandı!</div>
+    </div>
+  </body>
+  
+    <script>
+
+        let options = new Set([
+            "Batman Godzilla 2000",
+            "BATMAN Indoraptor",
+            "Batman King Shark",
+            "Batman Spinosaurus",
+            "Batman Tyrannosaurus REX",
+            "Black Panther Tyrannosaurus REX",
+            "Black Spiderman Tyrannosaurus REX",
+            "Black Spiderman Tyrannosaurus REX 93",
+            "Captain America Tyrannosaurus REX",
+            "Carnage Carnotaurus",
+            "Flash Spinosaurus",
+            "Green Lantern Tyrannosaurus REX 93",
+            "Hulk Godzilla 2000",
+            "Hulk Indoraptor",
+            "Hulk King Shark",
+            "HULK Ultimasaurus",
+            "Iron Man Indominus REX",
+            "Iron Man King Shark",
+            "Iron Man Tyrannosaurus REX",
+            "Iron Man Indominus REX",
+            "Joker Indominus REX",
+            "Joker Indoraptor",
+            "Joker King Shark",
+            "Joker Tyrannosaurus REX",
+            "Megatron REX",
+            "Red Joker Albertosaurus",
+            "Red Skull Tyrannosaurus REX 93",
+            "Spiderman Giganotosaurus",
+            "Sonic Velociraptor",
+            "Spiderman Allosaurus",
+            "Spiderman Giganotosaurus",
+            "Spiderman Indominus REX",
+            "Spiderman Indoraptor",
+            "Spiderman King Shark",
+            "Spiderman Tyrannosaurus REX 93",
+            "Superman Tyrannosaurus REX 93",
+            "VENOM King Shark",
+            "Wolverine Tyrannosauurs REX",
+            "Batman Indoraptor",
+            "Batman Ultimasaurus",
+            "Captain America Spinosaurus",
+            "Captain America Tyrannosaurus REX",
+            "Deadpool Indominus REX",
+            "Hulk Red Tyrannosaurus REX 93",
+            "Hulk Tyrannosaurus REX 93",
+            "Iron Man Giganotosaurus",
+            "Joker Mor Albertosaurus",
+            "MegaloRex Tyrannosaurus REX",
+            "Sonic Tyrannosaurus REX",
+            "Spiderman Indominus REX",
+            "Spiderman Tyrannosaurus REX",
+            "Superman Spinosaurus",
+            "Superman Ultimasaurus",
+            "The Flash Acrocanthosaurus",
+            "Spiderman Carnotaurus",
+            "Captain America King Shark",
+            "Venom Carnotaurus"
+        ]);
+        
+        let selectedOptions = [];
+        let days = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"];
+        let weeklyOptions = {
+            Pazartesi: [],
+            Salı: [],
+            Çarşamba: [],
+            Perşembe: [],
+            Cuma: [],
+            Cumartesi: [],
+            Pazar: []
+        };
+
+
+// Tatil günlerini tutacak değişken
+let holidayDays = [];
+
+function checkHoliday(day) {
+  let checkbox = document.querySelector(`input[name="${day.toLowerCase()}"]`);
+  if (checkbox.checked) {
+    holidayDays.push(day);
+  } else {
+    let index = holidayDays.indexOf(day);
+    if (index > -1) {
+      holidayDays.splice(index, 1);
+    }
+  }
+
+  updateWeeklyOptions(day);
+}
+
+function updateWeeklyOptions(day) {
+  let optionNames = weeklyOptions[day];
+
+  if (holidayDays.includes(day)) {
+    // Tatil günleri için boş hücre
+    optionCell.textContent = "";
+  } else {
+    // İlgili gün için dinozor adını al
+    let nameIndex = i * 7 + days.indexOf(day);
+    if (nameIndex < optionNames.length) {
+      optionCell.textContent = optionNames[nameIndex];
+    } else {
+      optionCell.textContent = ""; // Dinozor ismi yoksa boş hücre
+    }
+  }
+}
+
+// Tatil günlerini belirlemek için checkboxları seçin
+const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+// Her bir checkbox için event listener ekle
+checkboxes.forEach((checkbox) => {
+checkbox.addEventListener('change', function () {
+const day = this.value;
+checkHoliday(day);
+});
+});
+
+// Örneğin, bir takvim kullanıyorsanız:
+let calendarDays = document.querySelectorAll(".calendar-day");
+
+calendarDays.forEach(day => {
+day.addEventListener("click", function() {
+// Tatil günlerini seçmek için buraya gerekli kodu ekleyin
+
+    // Tatil günlerini kontrol etmek için checkHoliday() fonksiyonunu çağırın
+    checkHoliday(day.textContent);
+  });
+});
+
+
+function displaySelectedOptions() {
+    let selectedOptionsDiv = document.getElementById("selectedOptions");
+    selectedOptionsDiv.innerHTML = "";
+
+    let table = document.createElement("table");
+    let thead = document.createElement("thead");
+    let tbody = document.createElement("tbody");
+
+    // Günlerin olduğu satırı oluştur
+    let dayRow = document.createElement("tr");
+    let emptyHeader = document.createElement("th");
+    dayRow.appendChild(emptyHeader);
+
+    for (let day of days) {
+        let dayHeader = document.createElement("th");
+        dayHeader.textContent = day;
+        dayRow.appendChild(dayHeader);
+    }
+
+    thead.appendChild(dayRow);
+    table.appendChild(thead);
+
+    // Dinozorları içeren sütunları oluştur
+    for (let i = 0; i < 4; i++) {
+    let optionRow = document.createElement("tr");
+    let optionHeader = document.createElement("th");
+    optionHeader.textContent = `Dinozor ${i + 1}`;
+    optionRow.appendChild(optionHeader);
+
+    for (let day of days) {
+      let optionNames = weeklyOptions[day].split("\n");
+      let optionCell = document.createElement("td");
+      if (holidayDays.includes(day)) {
+        optionCell.textContent = ""; // Tatil günleri için boş hücre
+      } else {
+        optionCell.textContent = optionNames[i];
+      }
+      optionRow.appendChild(optionCell);
+    }
+
+    tbody.appendChild(optionRow);
+  }
+
+    table.appendChild(tbody);
+    selectedOptionsDiv.appendChild(table);
+// Yeni buton oluştur ve eklenen dinozorları ve tüm dinozor isimlerini göster
+let showAllOptionsButton = document.createElement("button");
+showAllOptionsButton.textContent = "Dinozorları Göster";
+showAllOptionsButton.addEventListener("click", showAllOptions);
+selectedOptionsDiv.appendChild(showAllOptionsButton);
+
+// Dinozor Ekle'nin yanına buton ekle
+let dinozorEkleButton = document.getElementById("dinozorEkle");
+selectedOptionsDiv.insertBefore(showAllOptionsButton, dinozorEkleButton.nextSibling);
+
+// Kapatma butonunu oluştur, başlangıçta gizli yap ve dinozorları gösteren listeyi kapat
+let closeAllOptionsButton = document.createElement("button");
+closeAllOptionsButton.textContent = "Kapat";
+closeAllOptionsButton.style.display = "none";
+closeAllOptionsButton.addEventListener("click", closeAllOptions);
+selectedOptionsDiv.appendChild(closeAllOptionsButton);
+
+
+
+    function closeAllOptions() {
+        let optionsList = document.getElementById("allOptionsList");
+        if (optionsList) {
+            optionsList.remove();
+            closeAllOptionsButton.style.display = "none";
+            showAllOptionsButton.style.display = "block";
+        }
+    }
+
+    function showAllOptions() {
+        // Önceden oluşturulmuş olan dinozorları gösteren listeyi bul
+        let optionsList = document.getElementById("allOptionsList");
+
+        // Eğer liste zaten varsa, onu kaldır
+        if (optionsList) {
+            optionsList.remove();
+            return; // Fonksiyondan çık
+        }
+
+        // Tüm dinozorları ve eklenen dinozorları içeren bir liste oluştur
+        let allOptions = [...options];
+        let mergedOptions = [...selectedOptions, ...allOptions];
+        mergedOptions.sort();
+
+        optionsList = document.createElement("ul");
+        optionsList.id = "allOptionsList";
+        mergedOptions.forEach(option => {
+            let listItem = document.createElement("li");
+            listItem.textContent = option;
+            optionsList.appendChild(listItem);
+        });
+
+        selectedOptionsDiv.appendChild(optionsList);
+    }
+}
+
+
+
+
+function addOption() {
+  let input = document.getElementById("addOptionInput");
+  let option = input.value.trim();
+
+  if (option !== "") {
+    if (
+      option.startsWith("Batman") ||
+      option.startsWith("Black Panther") ||
+      option.startsWith("Black Spiderman") ||
+      option.startsWith("Captain America") ||
+      option.startsWith("Carnage") ||
+      option.startsWith("Flash") ||
+      option.startsWith("Green Lantern") ||
+      option.startsWith("Hulk") ||
+      option.startsWith("Iron Man") ||
+      option.startsWith("Joker") ||
+      option.startsWith("Megatron") ||
+      option.startsWith("Red Joker") ||
+      option.startsWith("Spiderman") ||
+      option.startsWith("Sonic") ||
+      option.startsWith("VENOM") ||
+      option.startsWith("Wolverine") ||
+      option.startsWith("Deadpool") ||
+      option.startsWith("MegaloRex") ||
+      option.startsWith("The Flash")
+    ) {
+      if (!selectedOptions.includes(option)) {
+        options.push(option);
+        selectedOptions.push(option);
+        displaySelectedOptions();
+      }
+    } else {
+      options.push(option);
+      selectedOptions.push(option);
+      displaySelectedOptions();
+    }
+    input.value = "";
+  }
+}
+
+function shuffleOptions() {
+  let shuffledOptions = new Set();
+  options.forEach(option => {
+    let words = option.split(" ");
+    let firstWord = words.shift();
+    words = shuffleArray(words);
+    words.unshift(firstWord);
+    let shuffledOption = words.join(" ");
+    shuffledOptions.add(shuffledOption);
+  });
+  options = shuffledOptions;
+}
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+shuffleOptions();
+
+
+function deleteOption() {
+  let input = document.getElementById("addOptionInput");
+  let option = input.value.trim();
+
+  if (option !== "") {
+    // Silinecek dinozor ismini options ve selectedOptions dizilerinden kaldırın
+    options = options.filter((item) => item !== option);
+    selectedOptions = selectedOptions.filter((item) => item !== option);
+    displaySelectedOptions();
+    input.value = "";
+  }
+}
+
+function selectRandomOptions() {
+    let randomOptions = new Set();
+    let availableOptions = [...options]; // Kullanılabilir seçeneklerin bir kopyasını oluştur
+    let newOptions = [];
+
+    while (newOptions.length < 4) {
+        // Kullanılabilir seçeneklerden rastgele bir indeks seç
+        let randomIndex = Math.floor(Math.random() * availableOptions.length);
+
+        // Seçilen dinozor ismini al
+        let randomOption = availableOptions[randomIndex];
+
+        // Seçilen dinozoru sonuçlar listesine ekle (yinelenmiyorsa ve son 10 günde çıkmamışsa)
+        if (!selectedOptions.includes(randomOption) && !isOptionRecentlyUsed(selectedOptions, randomOption)) {
+            newOptions.push(randomOption);
+            selectedOptions.push(randomOption);
+        }
+
+        // Kullanılan seçeneği kullanılabilir seçenekler listesinden çıkar
+        availableOptions.splice(randomIndex, 1);
+    }
+
+    // Eğer tüm seçenekler kullanıldıysa, seçilen seçenekleri sıfırla
+    if (availableOptions.length === 0) {
+        selectedOptions = [];
+    }
+
+    // Sonuçları ekranda göster
+    let selectedOptionsDiv = document.getElementById("selectedOptions");
+    selectedOptionsDiv.innerHTML = ""; // İçeriği temizle
+
+    // Her bir seçeneği maddeler halinde ekrana ekle
+    newOptions.forEach((option) => {
+        let listItem = document.createElement("li");
+        listItem.textContent = option;
+        selectedOptionsDiv.appendChild(listItem);
+    });
+}
+function isOptionRecentlyUsed(selectedOptions, option) {
+    let recentlyUsedOptions = selectedOptions.slice(-10); // Son 10 seçeneği al
+
+    if (recentlyUsedOptions.includes(option)) {
+        return true;
+    }
+
+    return false;
+}
+
+
+function selectWeeklyOptions() {
+  let selectedOptions = {};
+
+  for (let day of days) {
+    let option = "";
+    let count = 0;
+    let availableOptions = Array.from(options);
+
+    while (count < 4) {
+      let randomIndex = Math.floor(Math.random() * availableOptions.length);
+      let randomOption = availableOptions[randomIndex];
+
+      if (!isOptionUsed(selectedOptions, randomOption)) {
+        option += randomOption + "\n";
+        count++;
+      }
+
+      availableOptions.splice(randomIndex, 1);
+    }
+
+    selectedOptions[day] = option.trim();
+  }
+
+  weeklyOptions = selectedOptions;
+  displaySelectedOptions();
+}
+
+
+function isOptionUsed(selectedOptions, option) {
+  for (let day of Object.keys(selectedOptions)) {
+    if (selectedOptions[day].includes(option)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+
+
+
+        function copyToClipboard(text) {
+            let textarea = document.createElement("textarea");
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+        }
+
+        function copyOptionsToClipboard() {
+            let optionsText = "";
+
+            for (let day of days) {
+                let option = weeklyOptions[day] || "";
+                optionsText += `${day}: ${option}\n`;
+            }
+
+            copyToClipboard(optionsText);
+            showCopyNotification();
+        }
+
+        function showCopyNotification() {
+            let copyNotification = document.getElementById("copyNotification");
+            copyNotification.style.display = "block";
+            setTimeout(() => {
+                copyNotification.style.display = "none";
+            }, 2000);
+        }
+
+        function exportOptionsToExcel() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+
+            let rows = [["Gün", "Dinozor 1", "Dinozor 2", "Dinozor 3", "Dinozor 4"]];
+for (let day of days) {
+    let option = weeklyOptions[day] || "";
+    let optionNames = option.split("\n");
+    let row = [day, ...optionNames.slice(0, 4)];
+    rows.push(row);
+}
+
+
+
+            rows.forEach(row => {
+                let csvRow = row.map(cell => `"${cell}"`).join(",");
+                csvContent += csvRow + "\r\n";
+            });
+
+            let encodedUri = encodeURI(csvContent);
+            let link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "weekly_options.csv");
+            document.body.appendChild(link); // Required for Firefox
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        document.getElementById("addOptionButton").addEventListener("click", addOption);
+        document.getElementById("deleteOptionButton").addEventListener("click", deleteOption);
+        document.getElementById("selectButton").addEventListener("click", selectRandomOptions);
+        document.getElementById("selectWeeklyButton").addEventListener("click", selectWeeklyOptions);
+        document.getElementById("copyButton").addEventListener("click", copyOptionsToClipboard);
+        document.getElementById("excelButton").addEventListener("click", exportOptionsToExcel);
+        document.getElementById("holidayForm").addEventListener("submit", function(event) {
+  event.preventDefault(); // Sayfanın yeniden yüklenmesini engelle
+
+  // Seçilen tatil günlerini kontrol etmek için bir dizi oluştur
+  let holidayDays = [];
+  let checkboxes = this.elements;
+  for (let i = 0; i < checkboxes.length; i++) {
+    if (checkboxes[i].type === "checkbox" && checkboxes[i].checked) {
+      holidayDays.push(checkboxes[i].value);
+    }
+  }
+
+  // Tatil günlerini kontrol eden fonksiyonu burada çağırabilirsiniz
+  checkHoliday(holidayDays);
+
+  // Seçilen tatil günlerini göster
+  console.log("Seçilen tatil günleri:", holidayDays);
+});
+
+    </script>
+</body>
+
+</html>
